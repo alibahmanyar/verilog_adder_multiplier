@@ -19,19 +19,20 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 `include "FA.v"
-module carry_la_adder(
-        input [15:0] a,
-        input [15:0] b,
+module carry_la_adder
+        #(parameter N=16)(
+        input [N-1:0] a,
+        input [N-1:0] b,
         input c_in,
-        output [15:0] out,
+        output [N-1:0] out,
         output c_out
     );
 
-    wire [15:0] carry_la; // carry look ahead bits
+    wire [N-1:0] carry_la; // carry look ahead bits
 
     genvar i;
     generate
-        for (i = 0; i < 16; i = i + 1) begin
+        for (i = 0; i < N; i = i + 1) begin
             FA fa (.a(a[i]), .b(b[i]), .c_in(carry_la[i]), .c_out(), .out(out[i]));
         end
     endgenerate
@@ -40,7 +41,7 @@ module carry_la_adder(
 
     genvar j;
     generate
-        for (j = 1; j < 16; j = j + 1) begin
+        for (j = 1; j < N; j = j + 1) begin
             assign carry_la[j] = (a[j-1] & b[j-1]) | ((a[j-1] | b[j-1]) & carry_la[j-1]);
         end
     endgenerate
