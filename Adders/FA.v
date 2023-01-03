@@ -34,8 +34,7 @@ module FA(
     
 endmodule
 
-
-// code your half adder design             
+            
 module half_add(
         input a,
         input b,
