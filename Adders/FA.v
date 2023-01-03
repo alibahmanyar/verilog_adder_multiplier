@@ -22,8 +22,8 @@ module FA(
         input a,  
         input b,  
         input c_in,  
-        output c_out,  
-        output out
+        output out,
+        output c_out
     );
     wire x,y,z;
 
