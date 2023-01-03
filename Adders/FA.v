@@ -27,15 +27,15 @@ module FA(
     );
     wire x,y,z;
 
-    half_add ha1(.a(a),.b(b),.sum(x),.c_out(y));
-    half_add ha2(.a(x),.b(c_in),.sum(out),.c_out(z));
+    HA ha1(.a(a),.b(b),.sum(x),.c_out(y));
+    HA ha2(.a(x),.b(c_in),.sum(out),.c_out(z));
 
     or or1(c_out,y,z);
     
 endmodule
 
             
-module half_add(
+module HA(
         input a,
         input b,
         output sum,
@@ -44,4 +44,4 @@ module half_add(
  
     xor xor1(sum,a,b);
     and and1(c_out,a,b);
-endmodule :half_add
+endmodule :HA
