@@ -43,14 +43,12 @@ module carry_save_multiplier(
 
 endmodule
 
-module cell(f1_i, f2_i, b_i, c_i, sum_o, c_o);
-  input f1_i, f2_i, b_i, c_i;
-  output sum_o, c_o;
+module cell(
+    input b1, b2, b_i, c_i,
+    output out, c_o);
 
-  wire pp;
-
-  assign pp = f1_i & f2_i;
-
-  FA adder(pp, b_i, c_i, sum_o, c_o);
+    wire mult_res;
+    assign mult_res = b1 & b2;
+    FA adder(mult_res, b_i, c_i, out, c_o);
 
 endmodule
