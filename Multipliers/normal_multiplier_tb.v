@@ -26,18 +26,20 @@ module normal_multiplier_tb;
 
 	// Inputs
 	reg clk;
-	reg [3:0] a;
-	reg [3:0] b;
+	reg [15:0] a;
+	reg [15:0] b;
 
 	// Outputs
-	wire [7:0] out;
+	wire [31:0] out;
+	wire finished;
 
 	// Instantiate the Unit Under Test (UUT)
 	normal_multiplier uut (
 		.clk(clk), 
 		.a(a), 
 		.b(b), 
-		.out(out)
+		.out(out),
+		.finished(finished)
 	);
 
 	initial begin 
@@ -50,8 +52,8 @@ module normal_multiplier_tb;
 		
 		// Initialize Inputs
 		clk = 0;
-		a = 4'd12;
-		b = 4'd13;
+		a = 16'd1234;
+		b = 16'd4321;
 
 		// Wait 100 ns for global reset to finish
 		#100;

@@ -19,11 +19,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module normal_multiplier
-        #(parameter N=4)(
+        #(parameter N=16)(
         input clk,
         input [N-1:0] a,
         input [N-1:0] b,
-        output reg [2*N-1:0] out
+        output reg [2*N-1:0] out,
+        output reg finished
     );
 
 
@@ -38,8 +39,8 @@ module normal_multiplier
     reg cb; //current bit
     
     always @(posedge clk) begin
-
         if (bn < N) begin
+            finished = 0;
             cb = b[bn];
 
             if (bn == 0) begin
@@ -56,6 +57,8 @@ module normal_multiplier
             end
             res = res >> 1;
             bn = bn + 1;
+        end else begin
+            finished = 1;
         end
 
         out = res;
