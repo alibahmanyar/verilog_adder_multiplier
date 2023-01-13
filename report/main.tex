@@ -259,9 +259,94 @@ always @(posedge clk) begin
 \caption{شماتیک ضرب‌کننده‌ی آرایه‌ای}
 \label{fig:4-bit-array-multiplier}
 \end{figure}
-این جمع‌کننده به صورت ۴ بیتی پیاده‌سازی شده است.
+این ضرب‌کننده به صورت ۴ بیتی پیاده‌سازی شده است.
 
 \subsection{\lr{Carry-Save Multiplier}}
+در ضرب کننده‌ی آرایه‌ای می‌بایست همواره منتظر انتشار نتیجه‌ی بیت‌های \lr{carry} بمانیم اما می‌توان عملیات جمع را به صورت دیگری نیز انجام داد، مثال زیر را در نظر می‌گیریم:
+\begin{center}
+\begin{latin}
+\begin{tabular}{c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c}
+ && & 1 & 1 & 1 \\
+$\times$ &&&   & 1 & 1 \\
+\hline
+  & 1 & 0 & 1 & 0 & 1 \\
+\end{tabular}
+\end{latin}
+\end{center}
+\noindent
+راه دیگر برای انجام ضرب فوق به صورت زیر است:
+
+\begin{center}
+\begin{latin}
+\begin{tabular}{c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c}
+ & 1 & 1 & 1 \\
+$\times$ &   & 1 & 1 \\
+\hline
+   1 & 2 & 2 & 1 \\
+\end{tabular}
+\end{latin}
+\end{center}
+این نمایش نامتداول اما قابل قهم است؛ در واقع این‌جا $2$ نشان دهنده‌ی $10$ است یعنی یک بیت $0$ با بیت کری $1$. بعد از به دست آمدن این نتیجه حال می‌توانیم بیت‌های کری به دست آمده را در مرحله‌ی بعدی جمع کرده و نتیجه‌ی نهایی را به صورت باینری متداول به دست آوریم:
+\begin{center}
+\begin{latin}
+\begin{tabular}{c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c}
+&& 1 & 0 & 0 & 1 \\
++ &&1 &  1 &  &  \\
+\hline
+  & 1 & 0 & 1 & 0 & 1 \\
+\end{tabular}
+\end{latin}
+\end{center}
+\noindent
+به عبارت دیگر در جمع \lr{carry-save} ابتدا جمع را حساب کرده سپس نتیجه بیت‌های \lr{carry} را با نتیجه‌ی به دست آمده جمع می‌کنیم.\\
+شمای یک جمع‌کننده‌ی \lr{carry-save} در شکل \ref{fig:carry-save-schem} مشخص است:
+\begin{figure}[H]
+\centering
+\includegraphics[width=7cm]{carry-save-schem}
+\caption{شماتیک \lr{carry-save adder}}
+\label{fig:carry-save-schem}
+\end{figure}
+\noindent
+حال می‌توانیم با استفاده از این جمع کننده یک سلول ضرب کننده طراحی کنیم که چهار بیت ورودی می‌گیرد، دو تای آن‌ها را در یکدیگر ضرب کرده نتیجه را با دو بیت دیگر جمع کرده و دو بیت خروجی می‌دهد:
+\begin{figure}[H]
+\centering
+\includegraphics[width=12cm]{carry-save-mul-schem}
+\caption{شماتیک \lr{carry-save multiplier}}
+\label{fig:carry-save-mul-schem}
+\end{figure}
+این ضرب‌کننده به صورت ۴ بیتی پیاده‌سازی شده است.
+
+\pagebreak
+\appendix
+%\renewcommand{\thesection}{پیوست   \alph{section}}
+\addcontentsline{toc}{section}{پیوست‌ها}
+\section{نتایج شبیه‌سازی‌ها}
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{adders-tb}
+\caption{شبیه‌سازی جمع‌کننده‌ها}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{shift-add-mul-tb}
+\caption{شبیه‌سازی \lr{Shift-Add Multiplier}}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{array-mul-tb}
+\caption{شبیه‌سازی \lr{Array Multiplier}}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{cs-mul-tb}
+\caption{شبیه‌سازی \lr{Carry-Save Multiplier}}
+\end{figure}
+
 
 %\begin{latin}
 %\begin{center}
