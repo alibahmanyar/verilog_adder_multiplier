@@ -245,7 +245,23 @@ always @(posedge clk) begin
 
 
 \subsection{\lr{Array Multiplier}}
-جمع‌کننده‌ی \lr{shift-Add} در چندین کلاک کار می‌کند، اما می‌توانیم بدون استفاده از کلاک و تنها با استفاده از یک مدار ترکیبی نیز عملیات جمع را پیاده‌سازی کنیم:
+جمع‌کننده‌ی \lr{shift-Add} در چندین کلاک کار می‌کند، اما می‌توانیم بدون استفاده از کلاک و تنها با استفاده از یک مدار ترکیبی نیز عملیات ضرب را پیاده‌سازی کنیم، ابتدا می‌توانیم عملیات ضرب را به صورت گسترده مطابق شکل \ref{fig:array_multiplication} بنویسیم:
+\begin{figure}[H]
+\centering
+\includegraphics[width=8cm]{array_multiplication}
+\caption{نمای گسترده‌ی ضرب دو عدد چهار بیتی}
+\label{fig:array_multiplication}
+\end{figure}
+حال می‌توان تمام عملیات نشان داده‌شده در شکل بالا را توسط یک مدار ترکیبی پیاده‌سازی کرد، شماتیک کلی این مدار به صورت شکل \ref{fig:4-bit-array-multiplier} خواهد بود:
+\begin{figure}[H]
+\centering
+\includegraphics[height=8cm]{4-bit-array-multiplier}
+\caption{شماتیک ضرب‌کننده‌ی آرایه‌ای}
+\label{fig:4-bit-array-multiplier}
+\end{figure}
+این جمع‌کننده به صورت ۴ بیتی پیاده‌سازی شده است.
+
+\subsection{\lr{Carry-Save Multiplier}}
 
 %\begin{latin}
 %\begin{center}

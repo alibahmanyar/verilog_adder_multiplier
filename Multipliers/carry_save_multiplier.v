@@ -49,6 +49,6 @@ module cell(
 
     wire mult_res;
     assign mult_res = b1 & b2;
-    FA adder(mult_res, b_i, c_i, out, c_o);
+    FA f1(mult_res, b_i, c_i, out, c_o);
 
 endmodule
