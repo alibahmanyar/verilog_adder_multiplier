@@ -134,7 +134,7 @@ captiondirection=RTL,language=Verilog
 \tableofcontents
 \pagebreak
 
-\section{پیاده‌سازی جمع‌کننده‌ها}
+\section{جمع‌کننده‌ها}
 \subsection{\lr{Ripple Adder}}
 این جمع کننده، ساده‌ترین نوع جمع‌کننده می‌باشد و طراحی نسبتاً ساده‌ای دارد. شمای کلی این طراحی در شکل \ref{fig:rip-car-schem} مشخص است:
 \begin{figure}[H]
@@ -153,7 +153,8 @@ captiondirection=RTL,language=Verilog
 \caption{شماتیک \lr{Ripple Adder}}
 \label{fig:rip-car-rtl}
 \end{figure}
-
+\noindent
+این جمع‌کننده به صورت پارامتری برای $N$ بیت پیاده‌سازی شده و تعداد بیت‌های آن توسط پارامتر $N$ ماژول قابل تنظیم است.
 \pagebreak
 \subsection{\lr{Carry-Lookahead Adder}}
 این جمع‌کننده نسبت به جمع‌کننده‌ی قبلی سرعت بیش‌تری دارد، اما همچنین ساختار آن نیز پیچیده‌تر است. ساختار کلی این جمع‌کننده در شکل \ref{fig:cla-schem} مشخص است:
@@ -172,7 +173,8 @@ captiondirection=RTL,language=Verilog
 \caption{شماتیک \lr{Carry-Lookahead Adder}}
 \label{fig:cla-adder-rtl}
 \end{figure}
-
+\noindent
+این جمع‌کننده به صورت پارامتری برای $N$ بیت پیاده‌سازی شده و تعداد بیت‌های آن توسط پارامتر $N$ ماژول قابل تنظیم است.
 
 \begin{LTR}
 \begin{lstlisting}[caption={\rl{پیاده‌سازی \lr{Carry-Lookahead}}​},label=code:cla,style=verilog]
@@ -182,8 +184,68 @@ assign carry_la[j] = (a[j-1] & b[j-1]) | ((a[j-1] | b[j-1]) & carry_la[j-1]);
 \noindent
 پیاده‌سازی \lr{Carry-Lookahead} در کد \ref{code:cla} مشخص است؛ در دو صورت بیت \lr{carry} می‌بایست ۱ باشد: یا هر دو بیت ورودی ۱ باشند، یا یکی از بیت‌های ورودی به همراه بیت \lr{carry} قبلی ۱ باشند.
 
+\pagebreak
 \subsection{\lr{Carry Select Adder}}
+در راهکار قبلی سرعت محاسبه بهبود یافت اما همچنان برای محاسبه‌ی هر یک از بیت‌های \lr{carry} می‌بایست منتظر خروجی بیت \lr{carry} قبلی در مدار \lr{carry-lookahead} بمانیم، به عبارت دیگر انتشار سیگنال در مدار \lr{carry-lookahead} همچنان زمان‌بر است.\\
+راهکار دیگر این است که کل عملیات جمع را به دسته‌های $n$ بیتی تقسیم کنیم و عملیات جمع را ابتدا به ازای هر دو بیت کری $0$ و $1$ انجام دهیم، سپس بعد از مشخص شدن بیت کری صحیح با استفاده از یک مالتی‌پلکسر آن را انتخاب کنیم. شمای کلی این راهکار در شکل \ref{fig:carry-select-schematic} مشخص است.
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{Carry-select-adder}
+\caption{شماتیک کلی \lr{Carry Select Adder}}
+\label{fig:carry-select-schematic}
+\end{figure}
+\noindent
+هر یک از بلوک‌های ۴ تایی در واقع یک \lr{ripple adder} هستند. بهینه‌ترین سایز زیر بلوک برای یک جمع $n$ بیتی نیز برابر با
+$\lfloor \sqrt{n} \rfloor$
+می‌باشد.\\
+پس از پیاده‌سازی این جمع‌کننده، بخشی از شماتیک \lr{RTL} آن به صورت شکل \ref{fig:carry-select-adder-rtl} می‌باشد، این جمع‌کننده بیش‌ترین مساحت را اشغال خواهد کرد اما سریع‌ترین جمع‌کننده‌ها نیز خواهد بود.
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{carry-select-adder-rtl}
+\caption{شماتیک \lr{Carry-select-adder}}
+\label{fig:carry-select-adder-rtl}
+\end{figure}
+\noindent
+این جمع‌کننده به صورت ۱۶ بیتی پیاده‌سازی شده است.
+\pagebreak
+\section{ضرب‌کننده‌ها}
+\subsection{\lr{Shift-Add Multiplier}}
+این ضرب‌کننده ساده‌ترین نوع ضرب‌کننده می‌باشد، این ضرب‌کننده با استفاده از کلاک در چندین سیکل هربار عملیات ضرب را برای یک بیت انجام داده و سپس حاصل را با خروجی نهایی جمع می‌کند. منطق اصلی این ضرب‌کننده در کد \ref{code:sam} مشخص است:
+\begin{LTR}
+\begin{lstlisting}[caption={\rl{پیاده‌سازی \lr{Shift-Add Multiplier}}​},label=code:sam,style=verilog]
+always @(posedge clk) begin
+        if (bn < N) begin
+            finished = 0;
+            cb = b[bn];
 
+            if (bn == 0) begin
+                case (cb)
+                    0: res[2*N-1:N] = (a & zero);
+                    1: res[2*N-1:N] = (a & one);
+                endcase
+            end else begin
+                case (cb)
+                    0: res[2*N:N] = res[2*N-1:N] + (a & zero);
+                    1: res[2*N:N] = res[2*N-1:N] + (a & one);
+                endcase
+
+            end
+            res = res >> 1;
+            bn = bn + 1;
+        end else begin
+            finished = 1;
+        end
+
+        out = res;
+    end
+\end{lstlisting}
+\end{LTR}
+\noindent
+این ضرب‌کننده به صورت پارامتری برای $N$ بیت پیاده‌سازی شده و تعداد بیت‌های آن توسط پارامتر $N$ ماژول قابل تنظیم است.
+
+
+\subsection{\lr{Array Multiplier}}
+جمع‌کننده‌ی \lr{shift-Add} در چندین کلاک کار می‌کند، اما می‌توانیم بدون استفاده از کلاک و تنها با استفاده از یک مدار ترکیبی نیز عملیات جمع را پیاده‌سازی کنیم:
 
 %\begin{latin}
 %\begin{center}
